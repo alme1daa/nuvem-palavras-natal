@@ -3,67 +3,245 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Novembro / Natal SENAI - Nuvem de Palavras</title>
-  <link rel="stylesheet" href="./style.css">
-  <!-- Biblioteca para gerar o QR Code -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-</head>
-<body>
-  <div class="background-decor"></div>
+  <title>Nuvem Tecnológica de Natal - SENAI</title>
   
-  <main class="container">
-    <header class="header">
-      <span class="badge">SENAI 2026</span>
-      <h1>Nuvem de Palavras de Natal</h1>
-      <p>Partilhe o seu desejo ou sentimento para este Natal!</p>
-    </header>
+  <!-- Fontes Tecnológicas e Natalinas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  
+  <!-- Gerador de QR Code -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-    <div class="content-grid">
-      <!-- Secção do Formulário -->
-      <section class="card form-card">
-        <h2>Envie a sua palavra</h2>
-        <form id="wordForm">
-          <div class="input-group">
-            <input type="text" id="wordInput" placeholder="Ex: Paz, União, Alegria..." maxlength="20" required autocomplete="off">
-            <button type="submit" id="submitBtn">Enviar</button>
-          </div>
-          <span class="hint">Máximo de 20 carateres</span>
-        </form>
-        <div id="feedback" class="feedback"></div>
-      </section>
+  <style>
+    :root {
+      --bg-dark: #070913;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --border-glow: rgba(0, 245, 212, 0.2);
+      
+      /* Cores Neon Natalinas (baseadas na foto de referência) */
+      --gold-neon: #FFD700;
+      --red-neon: #FF2E63;
+      --green-neon: #00F5D4;
+      --white-neon: #E2E8F0;
+      --pink-neon: #FF75C3;
+    }
 
-      <!-- Secção do QR Code -->
-      <section class="card qrcode-card">
-        <h3>Acesse pelo Telemóvel</h3>
-        <p>Aponte a câmara para enviar a sua palavra:</p>
-        <div id="qrcode" class="qrcode-box"></div>
-      </section>
-    </div>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
 
-    <!-- Secção da Nuvem de Palavras -->
-    <section class="card cloud-card">
-      <h2>Nuvem de Sentimentos</h2>
-      <div id="wordCloud" class="word-cloud">
-        <!-- As palavras vão carregar aqui dinamicamente -->
-        <span class="placeholder-text">A carregar palavras...</span>
-      </div>
-    </section>
-  </main>
+    body {
+      background: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 50% 20%, rgba(227, 6, 19, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(0, 245, 212, 0.1) 0%, transparent 40%);
+      color: #FFFFFF;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
 
-  <script>
-    // Gera o QR Code automaticamente apontando para a URL atual do site
-    window.addEventListener('DOMContentLoaded', () => {
-      const qrcodeContainer = document.getElementById("qrcode");
-      qrcodeContainer.innerHTML = ""; // Limpa conteúdo anterior
-      new QRCode(qrcodeContainer, {
-        text: window.location.href,
-        width: 140,
-        height: 140,
-        colorDark : "#0056A3",
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.H
-      });
-    });
-  </script>
-</body>
-</html>
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Cabeçalho */
+    header {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .badge {
+      background: linear-gradient(90deg, #E30613, #FF2E63);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      box-shadow: 0 0 15px rgba(227, 6, 19, 0.5);
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 2.5rem;
+      background: linear-gradient(180deg, #FFFFFF 0%, #CBD5E1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    .timer-info {
+      color: #94A3B8;
+      font-size: 0.9rem;
+      margin-top: 6px;
+    }
+
+    .timer-info span {
+      color: var(--green-neon);
+      font-weight: 600;
+    }
+
+    /* Grid do Layout */
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 850px) {
+      .grid-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Painel Lateral (Formulário + QR Code) */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-glow);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    .glass-card h2 {
+      font-size: 1.2rem;
+      margin-bottom: 14px;
+      color: var(--green-neon);
+    }
+
+    /* Formulário */
+    .input-box {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    input[type="text"] {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 14px;
+      border-radius: 12px;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--green-neon);
+      box-shadow: 0 0 15px rgba(0, 245, 212, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    button {
+      background: linear-gradient(135deg, #0056A3, #00F5D4);
+      color: #070913;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(0, 245, 212, 0.6);
+    }
+
+    /* QR Code */
+    .qr-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .qr-box {
+      background: #FFFFFF;
+      padding: 12px;
+      border-radius: 16px;
+      margin-top: 10px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    /* ÁRVORE DE NATAL (NUVEM DE PALAVRAS) */
+    .tree-display {
+      position: relative;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 30px 10px;
+    }
+
+    /* Estrela do Topo da Árvore */
+    .star-top {
+      font-size: 2.2rem;
+      color: var(--gold-neon);
+      text-shadow: 0 0 20px var(--gold-neon), 0 0 40px var(--gold-neon);
+      animation: pulseStar 2s infinite ease-in-out;
+      margin-bottom: 10px;
+    }
+
+    @keyframes pulseStar {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.2); opacity: 1; filter: drop-shadow(0 0 15px #FFD700); }
+    }
+
+    /* Container das Palavras no formato de Pinheiro */
+    .tree-shape-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      gap: 12px;
+    }
+
+    /* Camadas da Árvore (Aumentam de largura de cima para baixo) */
+    .tree-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+    }
+
+    .row-1 { max-width: 120px; }
+    .row-2 { max-width: 240px; }
+    .row-3 { max-width: 380px; }
+    .row-4 { max-width: 520px; }
+    .row-5 { max-width: 650px; }
+
+    /* Estilo e Animação Flutuante das Palavras */
+    .word-item {
+      display: inline-block;
+      font-weight: 800;
+      text-transform: uppercase;
+    }

@@ -4,244 +4,174 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nuvem Tecnológica de Natal - SENAI</title>
-  
-  <!-- Fontes Tecnológicas e Natalinas -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-  
-  <!-- Gerador de QR Code -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
   <style>
-    :root {
-      --bg-dark: #070913;
-      --card-bg: rgba(15, 23, 42, 0.75);
-      --border-glow: rgba(0, 245, 212, 0.2);
-      
-      /* Cores Neon Natalinas (baseadas na foto de referência) */
-      --gold-neon: #FFD700;
-      --red-neon: #FF2E63;
-      --green-neon: #00F5D4;
-      --white-neon: #E2E8F0;
-      --pink-neon: #FF75C3;
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #0b0f19; color: #ffffff; padding: 20px; min-height: 100vh; }
+    
+    .container { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+    
+    header { text-align: center; margin-bottom: 10px; }
+    .badge { background: #e30613; color: #fff; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-bottom: 8px; }
+    h1 { font-size: 2.2rem; color: #ffffff; margin-bottom: 6px; }
+    p.subtitle { color: #00f5d4; font-size: 0.95rem; }
+
+    .main-grid { display: grid; grid-template-columns: 300px 1fr; gap: 20px; }
+    @media (max-width: 768px) { .main-grid { grid-template-columns: 1fr; } }
+
+    .card { background: #161f33; border: 1px solid #233252; border-radius: 16px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .card h2 { color: #00f5d4; font-size: 1.1rem; margin-bottom: 12px; }
+
+    .input-group { display: flex; flex-direction: column; gap: 10px; }
+    input[type="text"] { background: #0b0f19; border: 1px solid #334155; padding: 12px; border-radius: 8px; color: #fff; font-size: 0.95rem; outline: none; }
+    input[type="text"]:focus { border-color: #00f5d4; }
+    button { background: #0056a3; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; text-transform: uppercase; }
+    button:hover { background: #0070d2; }
+
+    .qr-section { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .qr-section img { background: #ffffff; padding: 8px; border-radius: 12px; margin-top: 10px; width: 140px; height: 140px; border: 2px solid #00f5d4; }
+
+    /* Estilo e Animação da Árvore de Natal */
+    .tree-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 440px; position: relative; }
+    .star { font-size: 2.4rem; color: #ffd700; text-shadow: 0 0 20px #ffd700; margin-bottom: 12px; animation: pulse 2s infinite ease-in-out; }
+    @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.25);} }
+
+    .tree-shape { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+    .tree-row { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 12px 16px; }
+
+    .word-tag { display: inline-block; font-weight: bold; text-transform: uppercase; animation: float 3s infinite ease-in-out; transition: transform 0.2s; cursor: default; }
+    .word-tag:hover { transform: scale(1.3) !important; z-index: 10; }
+    @keyframes float { 0%,100%{transform:translateY(0px);} 50%{transform:translateY(-7px);} }
+
+    .trunk { width: 44px; height: 32px; background: linear-gradient(180deg, #8b4513, #4a250a); border-radius: 4px; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge">SENAI 2026</span>
+      <h1>Nuvem Tecnológica de Natal</h1>
+      <p class="subtitle">⏳ As palavras expiram e renovam-se a cada 6 horas</p>
+    </header>
+
+    <div class="main-grid">
+      <!-- Painel Lateral -->
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div class="card">
+          <h2>✨ Enviar Palavra</h2>
+          <form id="wordForm" class="input-group">
+            <input type="text" id="wordInput" placeholder="Ex: Paz, Inovação..." maxlength="20" required autocomplete="off">
+            <button type="submit">Publicar</button>
+          </form>
+        </div>
+
+        <div class="card qr-section">
+          <h2>📱 Acesso Telemóvel</h2>
+          <p style="font-size: 0.85rem; color: #94a3b8;">Aponte a câmara para enviar:</p>
+          <img id="qrCodeImg" src="" alt="QR Code Natal SENAI">
+        </div>
+      </div>
+
+      <!-- Árvore de Natal -->
+      <div class="card tree-container">
+        <div class="star">★</div>
+        <div id="treeCloud" class="tree-shape"></div>
+        <div class="trunk"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // QR Code nativo via API de Imagem (100% confiável)
+    const currentUrl = window.location.href;
+    document.getElementById('qrCodeImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(currentUrl);
+
+    const colors = ['#ffd700', '#ff2e63', '#00f5d4', '#ffffff', '#ff75c3', '#ffb6c1'];
+
+    // Lista inicial de fallback para a árvore nunca ficar vazia
+    const defaultWords = [
+      { word: "NATAL", frequency: 5 },
+      { word: "SENAI", frequency: 5 },
+      { word: "INOVAÇÃO", frequency: 4 },
+      { word: "UNIÃO", frequency: 4 },
+      { word: "TECNOLOGIA", frequency: 3 },
+      { word: "PAZ", frequency: 3 },
+      { word: "ESPERANÇA", frequency: 3 },
+      { word: "ALEGRIA", frequency: 2 },
+      { word: "AMOR", frequency: 2 },
+      { word: "FUTURO", frequency: 2 },
+      { word: "SAÚDE", frequency: 1 },
+      { word: "FESTA", frequency: 1 }
+    ];
+
+    function renderTree(words) {
+      const container = document.getElementById('treeCloud');
+      container.innerHTML = '';
+
+      const rows = [
+        document.createElement('div'),
+        document.createElement('div'),
+        document.createElement('div'),
+        document.createElement('div'),
+        document.createElement('div')
+      ];
+
+      rows.forEach(r => { r.className = 'tree-row'; container.appendChild(r); });
+
+      words.forEach((item, index) => {
+        const span = document.createElement('span');
+        span.className = 'word-tag';
+        span.innerText = item.word;
+        
+        const fontSize = Math.min(Math.max((item.frequency || 1) * 5 + 14, 14), 32);
+        span.style.fontSize = fontSize + 'px';
+
+        const color = colors[index % colors.length];
+        span.style.color = color;
+        span.style.textShadow = '0 0 10px ' + color;
+        span.style.animationDuration = (2.5 + (index % 3) * 0.5) + 's';
+
+        let rowIndex = 0;
+        if (index > 0 && index <= 2) rowIndex = 1;
+        else if (index > 2 && index <= 5) rowIndex = 2;
+        else if (index > 5 && index <= 8) rowIndex = 3;
+        else if (index > 8) rowIndex = 4;
+
+        rows[rowIndex].appendChild(span);
+      });
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+    async function loadWords() {
+      try {
+        const res = await fetch('/api/words');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            renderTree(data);
+            return;
+          }
+        }
+      } catch(e) {}
+      renderTree(defaultWords);
     }
 
-    body {
-      background: var(--bg-dark);
-      background-image: 
-        radial-gradient(circle at 50% 20%, rgba(227, 6, 19, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(0, 245, 212, 0.1) 0%, transparent 40%);
-      color: #FFFFFF;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-      overflow-x: hidden;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 1100px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    /* Cabeçalho */
-    header {
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .badge {
-      background: linear-gradient(90deg, #E30613, #FF2E63);
-      color: white;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 800;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      box-shadow: 0 0 15px rgba(227, 6, 19, 0.5);
-      display: inline-block;
-      margin-bottom: 10px;
-    }
-
-    h1 {
-      font-family: 'Cinzel', serif;
-      font-size: 2.5rem;
-      background: linear-gradient(180deg, #FFFFFF 0%, #CBD5E1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-    }
-
-    .timer-info {
-      color: #94A3B8;
-      font-size: 0.9rem;
-      margin-top: 6px;
-    }
-
-    .timer-info span {
-      color: var(--green-neon);
-      font-weight: 600;
-    }
-
-    /* Grid do Layout */
-    .grid-layout {
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 24px;
-    }
-
-    @media (max-width: 850px) {
-      .grid-layout {
-        grid-template-columns: 1fr;
+    document.getElementById('wordForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('wordInput');
+      const val = input.value.trim();
+      if (val) {
+        try {
+          await fetch('/api/words', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ word: val })
+          });
+        } catch(e) {}
+        input.value = '';
+        loadWords();
       }
-    }
+    });
 
-    /* Painel Lateral (Formulário + QR Code) */
-    .sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .glass-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-glow);
-      border-radius: 20px;
-      padding: 24px;
-      backdrop-filter: blur(16px);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    }
-
-    .glass-card h2 {
-      font-size: 1.2rem;
-      margin-bottom: 14px;
-      color: var(--green-neon);
-    }
-
-    /* Formulário */
-    .input-box {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    input[type="text"] {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 14px;
-      border-radius: 12px;
-      color: white;
-      font-size: 1rem;
-      outline: none;
-      transition: all 0.3s ease;
-    }
-
-    input[type="text"]:focus {
-      border-color: var(--green-neon);
-      box-shadow: 0 0 15px rgba(0, 245, 212, 0.3);
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    button {
-      background: linear-gradient(135deg, #0056A3, #00F5D4);
-      color: #070913;
-      border: none;
-      padding: 14px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 20px rgba(0, 245, 212, 0.6);
-    }
-
-    /* QR Code */
-    .qr-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .qr-box {
-      background: #FFFFFF;
-      padding: 12px;
-      border-radius: 16px;
-      margin-top: 10px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-    }
-
-    /* ÁRVORE DE NATAL (NUVEM DE PALAVRAS) */
-    .tree-display {
-      position: relative;
-      min-height: 520px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 30px 10px;
-    }
-
-    /* Estrela do Topo da Árvore */
-    .star-top {
-      font-size: 2.2rem;
-      color: var(--gold-neon);
-      text-shadow: 0 0 20px var(--gold-neon), 0 0 40px var(--gold-neon);
-      animation: pulseStar 2s infinite ease-in-out;
-      margin-bottom: 10px;
-    }
-
-    @keyframes pulseStar {
-      0%, 100% { transform: scale(1); opacity: 0.9; }
-      50% { transform: scale(1.2); opacity: 1; filter: drop-shadow(0 0 15px #FFD700); }
-    }
-
-    /* Container das Palavras no formato de Pinheiro */
-    .tree-shape-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      gap: 12px;
-    }
-
-    /* Camadas da Árvore (Aumentam de largura de cima para baixo) */
-    .tree-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px 18px;
-    }
-
-    .row-1 { max-width: 120px; }
-    .row-2 { max-width: 240px; }
-    .row-3 { max-width: 380px; }
-    .row-4 { max-width: 520px; }
-    .row-5 { max-width: 650px; }
-
-    /* Estilo e Animação Flutuante das Palavras */
-    .word-item {
-      display: inline-block;
-      font-weight: 800;
-      text-transform: uppercase;
-    }
+    loadWords();
+  </script>
+</body>
+</html>

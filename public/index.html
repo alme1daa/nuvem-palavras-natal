@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Nuvem de Palavras de Natal - SENAI</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+  <div class="screen-container">
+    <header class="screen-header">
+      <h1>🎄 Natal SENAI 🎄</h1>
+      <p>Compartilhe seu sentimento e construa nossa nuvem de Natal!</p>
+    </header>
+    <div class="cloud-viewport" id="cloudViewport">
+      <div class="center-logo-box" id="centerLogoBox">
+        <img src="assets/logo-senai.png" alt="SENAI" onerror="this.src='https://via.placeholder.com/200x80/005CA9/FFFFFF?text=SENAI'">
+      </div>
+      <div id="cloudWordsContainer"></div>
+    </div>
+    <div class="word-counter">Aprovadas: <strong id="totalCount">0</strong></div>
+    <div class="qr-sidebar">
+      <div id="qrcode"></div>
+      <p>Aponte a câmera e envie!</p>
+    </div>
+  </div>
+  <script src="js/main.js"></script>
+</body>
+</html>

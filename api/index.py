@@ -12,13 +12,13 @@ app.include_router(router, prefix="/api")
 app.mount("/", StaticFiles(directory="public", html=True), name="public")
 from datetime import datetime, timedelta
 
+from datetime import datetime, timedelta
+
 @app.get("/api/words")
 def get_words(db: Session = Depends(get_db)):
-    # Filtra apenas palavras enviadas nas últimas 6 horas
-    limite_tempo = datetime.utcnow() - timedelta(hours=6)
+    # Filtro automático: descarta palavras com mais de 12 horas
+    limite_12h = datetime.utcnow() - timedelta(hours=12)
     
-    palavras = db.query(PalavraModel)\
-                 .filter(PalavraModel.created_at >= limite_tempo)\
-                 .all()
-                 
-    return palavras
+    return db.query(PalavraModel)\
+             .filter(PalavraModel.created_at >= limite_12h)\
+             .all()

@@ -8,3 +8,5 @@ venv/
 .vercel
 *.db
 .env*
+.neon
+node_modules/

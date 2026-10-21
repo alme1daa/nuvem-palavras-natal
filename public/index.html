@@ -2,28 +2,68 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Nuvem de Palavras de Natal - SENAI</title>
-  <link rel="stylesheet" href="css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novembro / Natal SENAI - Nuvem de Palavras</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Biblioteca para gerar o QR Code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
-  <div class="screen-container">
-    <header class="screen-header">
-      <h1>🎄 Natal SENAI 🎄</h1>
-      <p>Compartilhe seu sentimento e construa nossa nuvem de Natal!</p>
+  <div class="background-decor"></div>
+  
+  <main class="container">
+    <header class="header">
+      <span class="badge">SENAI 2026</span>
+      <h1>Nuvem de Palavras de Natal</h1>
+      <p>Partilhe o seu desejo ou sentimento para este Natal!</p>
     </header>
-    <div class="cloud-viewport" id="cloudViewport">
-      <div class="center-logo-box" id="centerLogoBox">
-        <img src="assets/logo-senai.png" alt="SENAI" onerror="this.src='https://via.placeholder.com/200x80/005CA9/FFFFFF?text=SENAI'">
+
+    <div class="content-grid">
+      <!-- Secção do Formulário -->
+      <section class="card form-card">
+        <h2>Envie a sua palavra</h2>
+        <form id="wordForm">
+          <div class="input-group">
+            <input type="text" id="wordInput" placeholder="Ex: Paz, União, Alegria..." maxlength="20" required autocomplete="off">
+            <button type="submit" id="submitBtn">Enviar</button>
+          </div>
+          <span class="hint">Máximo de 20 carateres</span>
+        </form>
+        <div id="feedback" class="feedback"></div>
+      </section>
+
+      <!-- Secção do QR Code -->
+      <section class="card qrcode-card">
+        <h3>Acesse pelo Telemóvel</h3>
+        <p>Aponte a câmara para enviar a sua palavra:</p>
+        <div id="qrcode" class="qrcode-box"></div>
+      </section>
+    </div>
+
+    <!-- Secção da Nuvem de Palavras -->
+    <section class="card cloud-card">
+      <h2>Nuvem de Sentimentos</h2>
+      <div id="wordCloud" class="word-cloud">
+        <!-- As palavras vão carregar aqui dinamicamente -->
+        <span class="placeholder-text">A carregar palavras...</span>
       </div>
-      <div id="cloudWordsContainer"></div>
-    </div>
-    <div class="word-counter">Aprovadas: <strong id="totalCount">0</strong></div>
-    <div class="qr-sidebar">
-      <div id="qrcode"></div>
-      <p>Aponte a câmera e envie!</p>
-    </div>
-  </div>
-  <script src="js/main.js"></script>
+    </section>
+  </main>
+
+  <script>
+    // Gera o QR Code automaticamente apontando para a URL atual do site
+    window.addEventListener('DOMContentLoaded', () => {
+      const qrcodeContainer = document.getElementById("qrcode");
+      qrcodeContainer.innerHTML = ""; // Limpa conteúdo anterior
+      new QRCode(qrcodeContainer, {
+        text: window.location.href,
+        width: 140,
+        height: 140,
+        colorDark : "#0056A3",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+      });
+    });
+  </script>
 </body>
 </html>
